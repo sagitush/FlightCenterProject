@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../../Scripts/flight.js"></script>
+    <page src="../../Views/Page/index"></page>
+    <link href="~./../../../Content/the-search-picture.css" rel="stylesheet">
+    <title>Search Results Page</title>
+    <meta http-equiv="refresh" content="300" />
+    <link href="~./../../../Content/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- The Search flights table -->
+    <table border="1" id="SearchTable" style="margin-left: 10px; font-size:18px;" class="table table-striped table-bordered">
+        <tr>
+            <th>FlightNumber</th>
+            <th>AirlineCompany</th>
+            <th>OriginCountry</th>
+            <th>DestinationCountry</th>
+            <th>DepartureTime</th>
+            <th>LandingTime</th>
+        </tr>
+    </table>
+    <!-- The nevigation to the home page -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom">
+        <div class="container">
+            <a class="navbar-brand" href="index">To The Home Page</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+    <!-- Shoots ajax by the selected items in the dropups and get information to fill the table -->
+    <script>
+        const flights = []
+        $(document).ready(() => {
+
+
+            $tableFlights = $("#SearchTable")
+
+            $.ajax({
+                url: "/api/anonymousFacade/FlightsSearch" + window.location.search.replace("%20", " "),
+
+            })
+                .then((flightsWebapi) => {
+                    console.log(flightsWebapi)
+                    $.each(flightsWebapi, (i, oneFlight) => {
+                        const aFlight = new Flight(oneFlight.FlightNumber, oneFlight.AirlineCompanyName, oneFlight.OriginCountryName,
+                            oneFlight.DestinationCountryName, oneFlight.DepartureTime, oneFlight.LandingTime)
+                        flights.push(aFlight)
+                        $tableFlights.append("<tr>" +
+                            "<td>" + aFlight.id + "</td>" +
+                            "<td>" + aFlight.airlineid + "</td>" +
+                            "<td>" + aFlight.origincountry + "</td>" +
+                            "<td>" + aFlight.destcountry + "</td>" +
+                            "<td>" + aFlight.departureTime + "</td>" +
+                            "<td>" + aFlight.landingTime + "</td ></tr > ")
+                    })
+                })
+                .catch((err) => {
+                    swal("No flights were found to match the search terms");
+                    console.log(err)
+                })
+
+
+
+
+        })
+
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+
+

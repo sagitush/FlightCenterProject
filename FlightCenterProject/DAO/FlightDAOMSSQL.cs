@@ -519,5 +519,125 @@ namespace FlightCenterProject
 
             }
         }
+
+        public IList<Flight> GetFlightsThatDepartureAtTheNext12Hours()
+        {
+            IList<Flight> flights = new List<Flight>();
+
+            using (SqlConnection conn = new SqlConnection(FlightCenterConfig.dbName))
+            {
+
+                SqlCommand cmd = new SqlCommand("GET_FLIGHTS_DEPARTURE_AT_12_HOURS", conn);
+
+                cmd.Connection.Open();
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.Default);
+
+                while (reader.Read() == true)
+
+                {
+                    Flight flight = new Flight
+                    {
+                        Id = (long)reader["Id"],
+                        AirlineCompanyId = (long)reader["AirLineCompanyId"],
+                        OriginCountryCode = (long)reader["OriginCountryCode"],
+                        DestinationCountryCode = (long)reader["DestinationCountryCode"],
+                        DepartureTime = (DateTime)reader["DepartureTime"],
+                        LandingTime = (DateTime)reader["LandingTime"],
+                        RemainingTickets = (int)reader["RemainingTickets"],
+                    };
+
+                    flights.Add(flight);
+                }
+                cmd.Connection.Close();
+
+                return flights;
+
+            }
+        }
+
+        public IList<Flight> GetFlightsThatLandAtTheNext12Hours()
+        {
+            IList<Flight> flights = new List<Flight>();
+
+            using (SqlConnection conn = new SqlConnection(FlightCenterConfig.dbName))
+            {
+
+                SqlCommand cmd = new SqlCommand("GET_FLIGHTS_LAND_12_HOURS", conn);
+
+                cmd.Connection.Open();
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.Default);
+
+                while (reader.Read() == true)
+
+                {
+                    Flight flight = new Flight
+                    {
+                        Id = (long)reader["Id"],
+                        AirlineCompanyId = (long)reader["AirLineCompanyId"],
+                        OriginCountryCode = (long)reader["OriginCountryCode"],
+                        DestinationCountryCode = (long)reader["DestinationCountryCode"],
+                        DepartureTime = (DateTime)reader["DepartureTime"],
+                        LandingTime = (DateTime)reader["LandingTime"],
+                        RemainingTickets = (int)reader["RemainingTickets"],
+                    };
+
+                    flights.Add(flight);
+                }
+                cmd.Connection.Close();
+
+                return flights;
+
+            }
+
+        }
+
+        public IList<Flight> GetFoodsByFilter(long originCountry, long destinationCountry, long airlineName, long flightNumber)
+        {
+
+            IList<Flight> flights = new List<Flight>();
+
+            using (SqlConnection conn = new SqlConnection(FlightCenterConfig.dbName))
+            {
+                SqlCommand cmd1 = new SqlCommand("GET_FLIGHTS_BY_FILTER", conn);
+
+                cmd1.Parameters.Add(new SqlParameter("@FlightNum", flightNumber));
+                cmd1.Parameters.Add(new SqlParameter("@OriginContry", originCountry));
+                cmd1.Parameters.Add(new SqlParameter("@DestinatonCountry", destinationCountry));
+                cmd1.Parameters.Add(new SqlParameter("@AirlineCompany", airlineName));
+              
+                cmd1.Connection.Open();
+
+                cmd1.CommandType = CommandType.StoredProcedure;
+
+                SqlDataReader reader = cmd1.ExecuteReader(CommandBehavior.Default);
+
+                while (reader.Read() == true)
+
+                {
+                    Flight flight = new Flight
+                    {
+                        Id = (long)reader["Id"],
+                        AirlineCompanyId = (long)reader["AirLineCompanyId"],
+                        OriginCountryCode = (long)reader["OriginCountryCode"],
+                        DestinationCountryCode = (long)reader["DestinationCountryCode"],
+                        DepartureTime = (DateTime)reader["DepartureTime"],
+                        LandingTime = (DateTime)reader["LandingTime"],
+                        RemainingTickets = (int)reader["RemainingTickets"],
+                    };
+
+                    flights.Add(flight);
+                }
+                cmd1.Connection.Close();
+
+                return flights;
+            }
+        }
+
     }
 }

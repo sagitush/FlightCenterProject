@@ -17,5 +17,7 @@ namespace FlightCenterProject
         protected IFlightDAO _flightDAO = new FlightDAOMSSQL();
 
         protected ITicketDAO _ticketDAO = new TicketDAOMSSQL();
+
+        protected IFlightViewDAO _flightViewDAO = new FlightViewDAO();
     }
 }

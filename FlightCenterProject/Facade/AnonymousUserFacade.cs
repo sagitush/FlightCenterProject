@@ -94,5 +94,51 @@ namespace FlightCenterProject
         {
             return _ticketDAO.Get(id);
         }
+
+        public IList<Flight> GetFlightsDepartureAtNext12Hours()
+        {
+            return _flightDAO.GetFlightsThatDepartureAtTheNext12Hours();
+        }
+
+        public IList<Flight> GetFlightsLandAtNext12Hours()
+        {
+            return _flightDAO.GetFlightsThatLandAtTheNext12Hours();
+        }
+
+        public string GetNameCountryById(long id)
+        {
+            return _countryDAO.Get(id).CountryName;
+        }
+        
+        public IList<Flight> GetFlightsByFilter(long originCountry,long destinationCountry,long airlineCompany,long flightNum)
+        {
+            return _flightDAO.GetFoodsByFilter(originCountry, destinationCountry, airlineCompany, flightNum);
+        }
+
+        public IList<FlightView> GetFlightsLandAtNext12HoursAndLast4H()
+        {
+            return _flightViewDAO.GetFlightsThatLandAtTheNext12HoursAndLast4H();
+            
+        }
+
+        public IList<FlightView> GetFlightsDepartureForNext12Hours()
+        {
+            return _flightViewDAO.GetFlightsThatDepartureAtTheNext12Hours();
+
+        }
+
+        public IList<FlightView> GetLandingAndDepartureFlights()
+        {
+            return _flightViewDAO.GetLandingAndDepartureFlightView();
+
+        }
+
+        public IList<FlightView> GetFlightsViewByFilter(int flightNum, string originCoun, string destCoun, string airline, string searchType)
+        {
+            return _flightViewDAO.GetFlightsViewByFilter(flightNum, originCoun, destCoun, airline, searchType);
+      
+        }
+
+
     }
 }   

@@ -13,23 +13,31 @@ namespace FlightWebApplication.Controllers
    [BasicAuthenticationCompany]
     public class CompanyFacadeController : ApiController
     {
-        static ApiFacade apiFacade;
-        LoginToken<AirlineCompany> airlineLoginToken;
-
+        private static ApiFacade apiFacade;
+      
         static CompanyFacadeController()
         {          
             apiFacade = new ApiFacade();
         }
 
-        public LoggedInAirlineFacade getAirlineFacade()
+        public LoginToken<AirlineCompany> GetAirlineLoginToken()
         {
             Request.Properties.TryGetValue("airlineToken", out object loginUser);
-            airlineLoginToken = (LoginToken<AirlineCompany>)loginUser;
-            Request.Properties.TryGetValue("airlineFacade", out object facade);
+            LoginToken<AirlineCompany> airlineLoginToken = (LoginToken<AirlineCompany>)loginUser;
+            return airlineLoginToken;
+        }
 
+        public LoggedInAirlineFacade GetAirlineFacade()
+        {
+           
+            Request.Properties.TryGetValue("airlineFacade", out object facade);
             return (LoggedInAirlineFacade)facade;
         }
 
+        /// <summary>
+        /// Get all tickets of specific airline
+        /// </summary>
+        /// <returns></returns>
         [ResponseType(typeof(List<Ticket>))]
         [HttpGet]
         [Route("api/companyFacade/getAllTickets")]       
@@ -37,7 +45,7 @@ namespace FlightWebApplication.Controllers
         {
             try
             {
-                IList<Ticket> tickets = getAirlineFacade().GetAllTickets(airlineLoginToken);
+                IList<Ticket> tickets = GetAirlineFacade().GetAllTickets(GetAirlineLoginToken());
                 if (tickets.Count == 0)
                     return NotFound();
                 return Ok(tickets);
@@ -45,10 +53,13 @@ namespace FlightWebApplication.Controllers
             catch(Exception e)
             {
                 return BadRequest(e.ToString());
-            }
-           
+            }          
         }
 
+        /// <summary>
+        /// Get all flights of specific airline
+        /// </summary>
+        /// <returns></returns>
         [ResponseType(typeof(IList<Flight>))]
         [HttpGet]
         [Route("api/companyFacade/getAllFlights")]       
@@ -56,7 +67,7 @@ namespace FlightWebApplication.Controllers
         {
             try
             {
-                IList<Flight> flights = getAirlineFacade().GetAllFlights(airlineLoginToken);
+                IList<Flight> flights = GetAirlineFacade().GetAllFlights(GetAirlineLoginToken());
                 if (flights.Count == 0)
                     return NotFound();
                 return Ok(flights);
@@ -67,6 +78,11 @@ namespace FlightWebApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Create new flight of specific airline
+        /// </summary>
+        /// <param name="flight"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("api/CompanyFacade/CreateFlight")]
         public IHttpActionResult CreateFlight([FromBody] Flight flight)
@@ -75,7 +91,7 @@ namespace FlightWebApplication.Controllers
             {
                 if (flight == null)
                     return BadRequest(ModelState);
-                getAirlineFacade().CreateFlight(airlineLoginToken, flight);
+                GetAirlineFacade().CreateFlight(GetAirlineLoginToken(), flight);
                 return Ok();
             }
             catch (Exception e)
@@ -84,7 +100,12 @@ namespace FlightWebApplication.Controllers
             }
         }
            
-
+        /// <summary>
+        /// Update flight details 
+        /// </summary>
+        /// <param name="flight"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("api/CompanyFacade/updateFlight/{id}")]       
         public IHttpActionResult UpdateFlight([FromBody] Flight flight,[FromUri] long id)
@@ -96,7 +117,7 @@ namespace FlightWebApplication.Controllers
                 else
                 {
                     flight.Id = id;
-                    getAirlineFacade().UpdateFlight(airlineLoginToken, flight);
+                    GetAirlineFacade().UpdateFlight(GetAirlineLoginToken(), flight);
                     return Ok();
                 }
             }
@@ -106,13 +127,19 @@ namespace FlightWebApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Change the password of the airline
+        /// </summary>
+        /// <param name="oldPassword"></param>
+        /// <param name="newPassword"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("api/CompanyFacade/ChangeMyPassword/{oldPassword}/{newPassword}")]
         public IHttpActionResult ChangeMyPassword([FromUri] string oldPassword,[FromUri] string newPassword)
         {
             try
             {
-                getAirlineFacade().ChangeMyPassword(airlineLoginToken, oldPassword, newPassword);
+                GetAirlineFacade().ChangeMyPassword(GetAirlineLoginToken(), oldPassword, newPassword);
                 return Ok();
             }
             catch (Exception exp)
@@ -121,6 +148,12 @@ namespace FlightWebApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Update the airline details
+        /// </summary>
+        /// <param name="airline"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("api/CompanyFacade/mofidyAirlineDetails")]        
         public IHttpActionResult MofidyAirlineDetails([FromBody] AirlineCompany airline,[FromUri] long id)
@@ -132,7 +165,7 @@ namespace FlightWebApplication.Controllers
                 else
                 {
                     airline.Id = id;
-                    getAirlineFacade().MofidyAirlineDetails(airlineLoginToken, airline);
+                    GetAirlineFacade().MofidyAirlineDetails(GetAirlineLoginToken(), airline);
                     return Ok();
                 }
             }
@@ -142,6 +175,11 @@ namespace FlightWebApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Cancel flight that belong to this airline
+        /// </summary>
+        /// <param name="flightId"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("api/CompanyFacade/CancelFlight/{id}")]
         public IHttpActionResult CancelFlight(long flightId)
@@ -151,7 +189,7 @@ namespace FlightWebApplication.Controllers
                 Flight flight = apiFacade.GetMyFlight(flightId);
                 if (flight == null)
                     return BadRequest(ModelState);
-                getAirlineFacade().CancelFlight(airlineLoginToken, flight);
+                GetAirlineFacade().CancelFlight(GetAirlineLoginToken(), flight);
                 return Ok();
             }
             catch (Exception exp)

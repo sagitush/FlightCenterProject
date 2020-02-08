@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script src="../../Scripts/Search.js"></script>   
+    <title>Search Flights</title>
+    <!-- Bootstrap core CSS -->
+    <link href="~./../../../Content/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="~./../../../Content/the-big-picture.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- The nevigation to the departure and landing pages -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom">
+        <div class="container">
+            <a class="navbar-brand" href="departure">Departure</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="Landing">Landing</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- The search options dropups -->
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="dropup">
+                        <select id="listAirlines" class="nav-link dropdown-toggle" onchange="document.getElementById('listAirlines').style.color = 'white'" style="color:white; background-color:darkslategrey;  width:auto;">
+                            <option value='' hidden> Airline Company</option> <!-- placeholder -->
+                        </select>
+                    </li>
+
+                    <li class="dropup">
+                        <select id="sourceCountryList" class="nav-link dropdown-toggle" onchange="document.getElementById('sourceCountryList').style.color = 'white'" style="color:white; background-color:darkslategrey;  width:auto; ">
+                            <option value='' hidden>Source Country</option> <!-- placeholder -->
+                        </select>
+                    </li>
+
+                    <li class="dropup">
+                        <select id="destinationCountryList" class="nav-link dropdown-toggle" onchange="document.getElementById('destinationCountryList').style.color = 'white'" style="color:white; background-color:darkslategrey;  width:auto; ">
+                            <option value='' hidden>Destination Country</option> <!-- placeholder -->
+                        </select>
+                    </li>
+
+                    <li class="dropup">
+                        <select id="flightNumberList" class="nav-link dropdown-toggle" onchange="document.getElementById('flightNumberList').style.color = 'white'" style="color:white; background-color:darkslategrey;  width:auto; ">
+                            <option value=0 hidden>Flight Number</option> <!-- placeholder -->
+                        </select>
+                    </li>
+
+                    <li class="dropup">
+                        <select id="searchType" class="nav-link dropdown-toggle" onchange="document.getElementById('searchType').style.color = 'white'" style="color:white; background-color:darkslategrey;  width:auto; ">
+                            <option value='' hidden>Search Type</option>
+                            <option> Both</option>
+                            <option> Departure</option>
+                            <option> Landing</option>
+                        </select>
+                    </li>
+
+                    <!-- The button that you press to start searching the flights -->
+                    <a class="navbar-brand" href="#" onclick="findme()">
+                        Start Searching</>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!--Flights page content -->
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="text-white">
+                    <h1 class="mt-lg-n1 ml-5">Search Flights</h1>
+                    <p>
+                        <h6>This website is desighned to help you choose the best flight for you.</h6>
+                        <h6>  use the links below to start searching.</h6>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="~./../../../Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~./../../../Content/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

@@ -15,5 +15,8 @@ namespace FlightCenterProject
         IList<Flight> GetFlightsByDepatrureDate(DateTime departureDate);
         IList<Flight> GetFlightsByLandingDate(DateTime landingDate);
         IList<Flight> GetFlightsByCustomer(Customer customer);
+        IList<Flight> GetFlightsThatDepartureAtTheNext12Hours();
+        IList<Flight> GetFlightsThatLandAtTheNext12Hours();
+        IList<Flight> GetFoodsByFilter(long originCountry, long destinationCountry, long airlineName, long flightNumber);
     }
 }

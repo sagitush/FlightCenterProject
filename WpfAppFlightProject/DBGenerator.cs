@@ -238,12 +238,22 @@ namespace WpfAppFlightProject
                         {
                             WebResult dataObjects = response.Content.ReadAsAsync<WebResult>().Result;
 
-                            DateTime departureTime = dataObjects.results[0].dob.date;
+                            //DateTime departureTime = dataObjects.results[0].dob.date;
 
-                            DateTime landingTime = dataObjects.results[0].registered.date;
+                            //DateTime landingTime = dataObjects.results[0].registered.date;
 
-                            DateTime DEPARTURE_TIME = new DateTime(departureTime.Year, departureTime.Month, departureTime.Day, departureTime.Hour, departureTime.Minute, departureTime.Second);
-                            DateTime LANDING_TIME = new DateTime(landingTime.Year, landingTime.Month, landingTime.Day, landingTime.Hour, landingTime.Minute, landingTime.Second);
+                            // DateTime DEPARTURE_TIME = new DateTime(departureTime.Year, departureTime.Month, departureTime.Day, departureTime.Hour, departureTime.Minute, departureTime.Second);
+                            // DateTime LANDING_TIME = new DateTime(landingTime.Year, landingTime.Month, landingTime.Day, landingTime.Hour, landingTime.Minute, landingTime.Second);
+                            DateTime DEPARTURE_TIME = DateTime.Now;
+                            DEPARTURE_TIME = DEPARTURE_TIME.AddDays(rnd.Next(0, 8));
+                            DEPARTURE_TIME = DEPARTURE_TIME.AddHours(rnd.Next(0, 25));
+                            DEPARTURE_TIME = DEPARTURE_TIME.AddMinutes(rnd.Next(0, 61));
+                            DEPARTURE_TIME = DEPARTURE_TIME.AddSeconds(rnd.Next(0, 61));
+
+                            DateTime LANDING_TIME = DEPARTURE_TIME;
+                            LANDING_TIME = LANDING_TIME.AddHours(rnd.Next(0, 25));
+                            LANDING_TIME = LANDING_TIME.AddMinutes(rnd.Next(0, 61));
+                            LANDING_TIME = LANDING_TIME.AddSeconds(rnd.Next(0, 61));
 
                             FlightCenterProject.FlightDAOMSSQL flightDAOMSSQL = new FlightCenterProject.FlightDAOMSSQL();
                             FlightCenterProject.Flight flight = new FlightCenterProject.Flight(airlineId, originCountryCode, destinationCountryCode, DEPARTURE_TIME, LANDING_TIME, rnd.Next(200));

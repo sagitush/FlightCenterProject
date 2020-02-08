@@ -13,22 +13,30 @@ namespace FlightWebApplication.Controllers
     [BasicAuthenticationCustomer]
     public class CustomerFacadeController : ApiController
     {       
-        static ApiFacade apiFacade;
-        LoginToken<Customer> custLoginToken;
+        private static ApiFacade apiFacade;
+       
         static CustomerFacadeController()
         {
             apiFacade = new ApiFacade();
         }
 
-        public LoggedInCustomerFacade getCustomerFacade()
+        public LoginToken<Customer> GetCustLoginToken()
         {
             Request.Properties.TryGetValue("customerToken", out object loginUser);
-            custLoginToken = (LoginToken<Customer>)loginUser;
-            Request.Properties.TryGetValue("customerFacade", out object facade);
+            LoginToken<Customer> custLoginToken = (LoginToken<Customer>)loginUser;
+            return custLoginToken;
+        }
 
+        public LoggedInCustomerFacade GetCustomerFacade()
+        {          
+            Request.Properties.TryGetValue("customerFacade", out object facade);
             return (LoggedInCustomerFacade)facade;
         }
 
+        /// <summary>
+        /// Get all the flight of this customer
+        /// </summary>
+        /// <returns></returns>
         [ResponseType(typeof(IList<Flight>))]
         [HttpGet]
         [Route("api/CustomerFacade/GetAllMyFlights")]
@@ -36,7 +44,8 @@ namespace FlightWebApplication.Controllers
         {
             try
             {
-                IList<Flight> flights = getCustomerFacade().GetAllMyFlights(custLoginToken);
+               
+                IList<Flight> flights = GetCustomerFacade().GetAllMyFlights(GetCustLoginToken());
                 if (flights.Count == 0)
                     return NotFound();
                 return Ok(flights);
@@ -48,6 +57,11 @@ namespace FlightWebApplication.Controllers
 
         }
 
+        /// <summary>
+        /// Purchase ticket to this customer
+        /// </summary>
+        /// <param name="flightId"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("api/CustomerFacade/PurchaseTicket")]
         public IHttpActionResult PurchaseTicket(long flightId)
@@ -59,7 +73,7 @@ namespace FlightWebApplication.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                Ticket ticket = getCustomerFacade().PurchaseTicket(custLoginToken, flight);
+                Ticket ticket = GetCustomerFacade().PurchaseTicket(GetCustLoginToken(), flight);
                 return Ok(ticket);
             }
             catch (Exception e)
@@ -68,6 +82,11 @@ namespace FlightWebApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Cancel ticket for this customer
+        /// </summary>
+        /// <param name="ticketId"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("api/CustomerFacade/CancelTicket")]
         public IHttpActionResult CancelTicket(long ticketId)
@@ -77,7 +96,7 @@ namespace FlightWebApplication.Controllers
                 Ticket ticket = apiFacade.GetMyTicket(ticketId);
                 if (ticket == null)
                     return BadRequest(ModelState);
-                getCustomerFacade().CancelTicket(custLoginToken, ticket);
+                GetCustomerFacade().CancelTicket(GetCustLoginToken(), ticket);
                 return Ok();
             }
             catch (Exception e)

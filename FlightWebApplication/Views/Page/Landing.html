@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
+    <script src="../../Scripts/flight.js"></script>
+    <link href="~./../../../Content/the-landing-picture.css" rel="stylesheet">
+    <meta http-equiv="refresh" content="300" />
+    <title>Landing Page</title>
+    <link href="~./../../../Content/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- The landing flights table -->
+    <table border="1" id="flightsTable" style="margin-left: 10px; font-size:18px; " class="table table-striped table-bordered; text-reset">
+        <tr>
+            <th>FlightNumber</th>
+            <th>AirlineCompany</th>
+            <th>OriginCountry</th>
+            <th>DestinationCountry</th>
+            <th>LandingTime</th>
+            <th>Status</th>
+        </tr>
+    </table>
+    <!-- The nevigation to the home page -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom">
+        <div class="container">
+            <a class="navbar-brand" href="index">To The Home Page</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+    <!-- Shoots ajax to get information to fill the table -->
+    <script>
+        const flights = []
+        $(document).ready(() => {
+            $tableFlights = $("#flightsTable")
+            $.ajax({
+                url: "/api/anonymousFacade/flightsLanding"
+            })
+                .then((flightsWebapi) => {
+                    console.log(flightsWebapi)
+                    $.each(flightsWebapi, (i, oneFlight) => {
+                        const aFlight = new Flight(oneFlight.FlightNumber, oneFlight.AirlineCompanyName, oneFlight.OriginCountryName,
+                            oneFlight.DestinationCountryName, oneFlight.DepartureTime, oneFlight.LandingTime)
+                        flights.push(aFlight)
+                        $tableFlights.append("<tr>" +
+                            "<td>" + aFlight.id + "</td>" +
+                            "<td>" + aFlight.airlineid + "</td>" +
+                            "<td>" + aFlight.origincountry + "</td>" +
+                            "<td>" + aFlight.destcountry + "</td>" +
+                            "<td>" + aFlight.landingTime + "</td>" +
+                            "<td>" + aFlight.status + "</td ></tr > ")
+                    })
+                })
+                .catch((err) => { console.log(err) })
+        })
+    </script>
+</body>
+</html>

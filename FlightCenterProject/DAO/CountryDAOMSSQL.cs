@@ -139,7 +139,7 @@ namespace FlightCenterProject
         {
             using (SqlConnection conn = new SqlConnection(FlightCenterConfig.dbName))
             {
-                SqlCommand cmd = new SqlCommand($"UPDATE Countries SET CountryName={country.CountryName}," +
+                SqlCommand cmd = new SqlCommand($"UPDATE Countries SET CountryName='{country.CountryName}'," +
                    $"WHERE Id={country.Id}", conn);
 
                 cmd.Connection.Open();

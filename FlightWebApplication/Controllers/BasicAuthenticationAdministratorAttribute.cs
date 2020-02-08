@@ -17,13 +17,15 @@ namespace FlightWebApplication.Controllers
     {
         public override void OnAuthorization(HttpActionContext actionContext)
         {
-            
+            //Checks whether user information has been entered
             if (actionContext.Request.Headers.Authorization == null)
             {
                 actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Forbidden,
                     "You must send user name and password in basic authentication");
                 return;
             }
+
+            //Encoding the user name and password from base64
             string authenticationToken = actionContext.Request.Headers.Authorization.Parameter;
             string decodedAuthenticationToken = Encoding.UTF8.GetString(
                 Convert.FromBase64String(authenticationToken));

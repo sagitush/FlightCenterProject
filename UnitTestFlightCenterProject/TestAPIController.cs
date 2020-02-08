@@ -10,14 +10,18 @@ using System.Net.Http;
 using FlightWebApplication.Controllers;
 using FlightCenterProject;
 using System.Net.Http.Headers;
+using FlightWebApplication;
+using System.Web.Http.Controllers;
 
 namespace UnitTestFlightCenterProject
 {
     [TestClass]
     public class TestAPIController
     {
-        
-        private const string URL = "http://localhost:59701";
+
+        private const string URL = //"http://localhost:59701"
+            "https://flightwebapplication.azurewebsites.net";
+
         private string GetAllCompaniesUrl = $"{URL}/api/anonymousFacade/allAirlines";
         private string CreateNewAirlineUrl = $"{URL}/api/AdministratorFacade/CreateNewAirline";
 
@@ -27,8 +31,17 @@ namespace UnitTestFlightCenterProject
             LoggedInAdministratorFacade facade = FlyingCenterSystem.GetInstance().Login(TestResource.adminName, TestResource.adminPassWord, out LoginTokenBase login) as LoggedInAdministratorFacade;
             AirlineCompany company = new AirlineCompany("sagitair", "999", "888", 1);
             facade.CreateNewAirline(login as LoginToken<Administrator>, company);
-            List<AirlineCompany> companies = GetAllCompanies(GetAllCompaniesUrl);
-            Assert.IsTrue(companies.Contains(company));
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                using (HttpResponseMessage response = client.GetAsync(GetAllCompaniesUrl).Result)
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        content.Headers.Equals(company);
+                    }
+                }
+            }
         }
 
         [TestMethod]
@@ -37,6 +50,7 @@ namespace UnitTestFlightCenterProject
             LoggedInAdministratorFacade facade = FlyingCenterSystem.GetInstance().Login(TestResource.adminName, TestResource.adminPassWord, out LoginTokenBase login) as LoggedInAdministratorFacade;
             AirlineCompany company = new AirlineCompany("sagitair", "999", "888", 1);
             facade.CreateNewAirline(login as LoginToken<Administrator>, company);
+
             List<AirlineCompany> companies = GetAllCompanies(GetAllCompaniesUrl);
             Assert.IsTrue(companies.Contains(company));
         }
@@ -63,7 +77,7 @@ namespace UnitTestFlightCenterProject
             string token = "";
             HttpClient client = new HttpClient();
             HttpResponseMessage response;
-            client.BaseAddress = new Uri(GetTokenUrl);
+            client.BaseAddress = new Uri(URL);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             string userDetails =
                 "{" +
@@ -71,11 +85,12 @@ namespace UnitTestFlightCenterProject
                 $" \"Password\": \"{password}\"" +
                 "}";
             HttpContent httpContent = new StringContent(userDetails, Encoding.UTF8, "application/json");
-            response = client.PostAsync(GetTokenUrl, httpContent).Result;
+            response = client.PostAsync(URL, httpContent).Result;
             token = response.Content.ReadAsStringAsync().Result;
-            return FixApiResponseString(token);
+            return token;
         }
 
+        
     }
 
   
